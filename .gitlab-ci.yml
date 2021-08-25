@@ -1,7 +1,16 @@
 build:
   script:
-    - echo "Build"
+    # valeur de clé sur plusieurs lignes telle quelle
+    - |
+      echo "Build"
+      echo "End"
 
 test:
   script:
-    - echo "Test"
+    # répartition d'une ligne longue sur plusieurs ligne
+    - >
+      echo "Test" && 
+      echo "d'une" && 
+      echo "commande" && 
+      echo "arbitraitrement" && 
+      echo "longue" 
