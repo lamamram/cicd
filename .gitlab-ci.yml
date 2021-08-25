@@ -1,20 +1,16 @@
 # image par défaut du pipeline
 image: gitlab.myusine.fr:5050/root/myusine/ubuntu:focal
 
+stages:
+  - builds
+  - tests
+
 build:
+  stage: builds
   script:
-    # valeur de clé sur plusieurs lignes telle quelle
-    - |
-      echo "Build"
-      echo "End"
+    - echo "Build"
 
 test:
-  image: python:rc-slim-buster
+  stage: tests
   script:
-    # répartition d'une ligne longue sur plusieurs ligne
-    - >
-      echo "Test" && 
-      echo "d'une" && 
-      echo "commande" && 
-      echo "arbitraitrement" && 
-      echo "longue"
+    - echo "Test"
