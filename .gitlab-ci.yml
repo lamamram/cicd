@@ -1,5 +1,5 @@
 # image par défaut du pipeline
-image: ubuntu:focal
+image: gitlab.myusine.fr:5050/root/myusine/ubuntu:focal
 
 build:
   script:
