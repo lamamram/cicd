@@ -1,0 +1,17 @@
+# image par défaut du pipeline
+image: gitlab.myusine.fr:5050/root/myusine/ubuntu:focal
+
+stages:
+  - builds
+  - tests
+
+build_2:
+  stage: builds
+  script:
+    - echo "Build2"
+
+test:
+  stage: tests
+  needs: [build_2]
+  script:
+    - echo "Test"

@@ -2,22 +2,14 @@
 image: gitlab.myusine.fr:5050/root/myusine/ubuntu:focal
 
 stages:
-  - builds
-  - tests
+  - triggers
 
-build_1:
-  stage: builds
-  script:
-    - sleep 5
-    - echo "Build1"
+trigger1:
+  stage: triggers
+  trigger:
+    include: module_1/module1.yml
 
-build_2:
-  stage: builds
-  script:
-    - echo "Build2"
-
-test:
-  stage: tests
-  needs: [build_2]
-  script:
-    - echo "Test"
+trigger2:
+  stage: triggers
+  trigger:
+    include: module_2/module2.yml
