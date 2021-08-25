@@ -5,12 +5,19 @@ stages:
   - builds
   - tests
 
-build:
+build_1:
   stage: builds
   script:
-    - echo "Build"
+    - sleep 5
+    - echo "Build1"
+
+build_2:
+  stage: builds
+  script:
+    - echo "Build2"
 
 test:
   stage: tests
+  needs: [build_2]
   script:
     - echo "Test"
