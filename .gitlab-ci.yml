@@ -1,3 +1,6 @@
+# image par défaut du pipeline
+image: ubuntu:focal
+
 build:
   script:
     # valeur de clé sur plusieurs lignes telle quelle
@@ -6,6 +9,7 @@ build:
       echo "End"
 
 test:
+  image: python:rc-slim-buster
   script:
     # répartition d'une ligne longue sur plusieurs ligne
     - >
@@ -13,4 +17,4 @@ test:
       echo "d'une" && 
       echo "commande" && 
       echo "arbitraitrement" && 
-      echo "longue" 
+      echo "longue"
