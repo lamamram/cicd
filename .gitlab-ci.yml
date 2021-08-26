@@ -1,6 +1,11 @@
 # image par défaut du pipeline
 image: gitlab.myusine.fr:5050/root/myusine/ubuntu:focal
 
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
 stages:
   - builds
   - tests
@@ -8,7 +13,7 @@ stages:
 
 # variables d'environnement custom
 variables:
-  TRIGGER_TEST1: "on"
+  TRIGGER_TEST1: "off"
 
 build1:
   #variables:
@@ -18,9 +23,11 @@ build1:
     - echo "Build 1"
   # build 1 déclenche si branche master
   # ET jobs précédents en succès
+  # OU merge_request
   rules:
     - if: $CI_COMMIT_BRANCH == "master"
       when: on_success
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
 build2:
   stage: builds
@@ -62,4 +69,5 @@ deploy:
   rules:
     - if: $CI_COMMIT_BRANCH == "master"
       when: manual
+
 
