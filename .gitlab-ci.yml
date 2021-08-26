@@ -9,42 +9,30 @@ workflow:
 stages:
   - builds
   - tests
-  - deploys
 
 build:
   stage: builds
   script:
     - echo "Build 1"
-    - mkdir artifacts
-    # production d'un rapport de build
-    - echo "content" > artifacts/report
-  # prélèvement d'artefacts dans des chemins
-  # avec durée de vie
-  artifacts:
-    expire_in: 1 hour
+    - mkdir venv
+    - echo "venv" > venv/package
+  # génération d'un cache de dépendances logicielles
+  cache:
+    key: venv
     paths:
-      - artifacts/
+      - venv/
+    policy: push
 
 test:
   stage: tests
-  # disponibilité par défaut des artefacts amont 
-  # dans les jobs aval
   script:
     - echo "Test 1"
-    - cat artifacts/report
-    - echo "tests" > artifacts/test_report
-  artifacts:
-    expire_in: 1 hour
-    paths:
-      - artifacts/test_report
+    - cat venv/package
+  # utilisation simple du cache venv
+  cache:
+    key: venv
+    untracked: true
+    policy: pull
 
-deploy:
-  stage: deploys
-  script:
-    - echo "Deploy"
-  # sélection des jobs dont on requiert 
-  # les artefacts
-  dependencies:
-    - test
 
 
