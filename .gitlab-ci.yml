@@ -2,14 +2,64 @@
 image: gitlab.myusine.fr:5050/root/myusine/ubuntu:focal
 
 stages:
-  - triggers
+  - builds
+  - tests
+  - deploys
 
-trigger1:
-  stage: triggers
-  trigger:
-    include: module_1/module1.yml
+# variables d'environnement custom
+variables:
+  TRIGGER_TEST1: "on"
 
-trigger2:
-  stage: triggers
-  trigger:
-    include: module_2/module2.yml
+build1:
+  #variables:
+  # 
+  stage: builds
+  script:
+    - echo "Build 1"
+  # build 1 déclenche si branche master
+  # ET jobs précédents en succès
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master"
+      when: on_success
+
+build2:
+  stage: builds
+  script:
+    - echo "Build 2"
+  # déclenche si branche de type feature (regex)
+  # ET si modification sur les chemins de type README*
+  rules:
+    - if: $CI_COMMIT_BRANCH =~ /^feature[0-9]+$/
+      changes:
+        - README*
+
+test1:
+  stage: tests
+  script:
+    - echo "Test 1"
+  # déclenche si branche ne matche pas la regex
+  # indépendamment des jobs précédents
+  # OU évaluation d'une variable
+  rules:
+    - if: $CI_COMMIT_BRANCH !~ /^feature[0-9]+$/
+      when: always
+    - if: $TRIGGER_TEST1 != "off"
+
+test2:
+  stage: tests
+  script:
+    - echo "Test 2"
+    - exit 2
+  # déclenche si regex et ne plante pas le pipeline si en erreur
+  rules:
+    - if: $CI_COMMIT_BRANCH =~ /^feature[0-9]+$/
+      allow_failure: true
+
+deploy:
+  stage: deploys
+  script:
+    - echo "Deploy"
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master"
+      when: manual
+
