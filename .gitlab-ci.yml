@@ -27,7 +27,7 @@ build:
 
 test:
   stage: tests
-  # disponibilité des artefacts amont 
+  # disponibilité par défaut des artefacts amont 
   # dans les jobs aval
   script:
     - echo "Test 1"
@@ -42,6 +42,8 @@ deploy:
   stage: deploys
   script:
     - echo "Deploy"
+  # sélection des jobs dont on requiert 
+  # les artefacts
   dependencies:
     - test
 
