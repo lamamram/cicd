@@ -9,6 +9,13 @@ workflow:
 stages:
   - builds
   - tests
+  - deploys
+
+# job désactivé (".") avec référence YAML ("&")
+.cache_pull: &cache_pull
+  key: venv
+  untracked: true
+  policy: pull
 
 build:
   stage: builds
@@ -29,10 +36,14 @@ test:
     - echo "Test 1"
     - cat venv/package
   # utilisation simple du cache venv
-  cache:
-    key: venv
-    untracked: true
-    policy: pull
+  # alias YAML ("*")
+  cache: *cache_pull
+
+deploy:
+  stage: deploys
+  script:
+    - echo "deploys"
+  cache: *cache_pull
 
 
 
