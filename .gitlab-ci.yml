@@ -20,7 +20,7 @@ services:
     # hostname du service réseau
     alias: docker
     command:
-      - --insercure-registry
+      - --insecure-registry
       - $CI_REGISTRY
 
 #désactivé
