@@ -20,7 +20,7 @@ services:
     # hostname du service réseau
     alias: docker
     command:
-      - whoami
+      - whoami || exit
 
 #désactivé
 build:
