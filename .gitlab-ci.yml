@@ -12,6 +12,7 @@ stages:
 build:
   stage: builds
   script:
+    - whoami
     - docker build -t my_tomcat:1.0 .
 
 
