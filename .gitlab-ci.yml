@@ -16,10 +16,9 @@ stages:
 # depuis le conteneur du job
 services:
   # - docker:19-dind
-  - name: $CI_REGISTRY/root/myusine/docker:19-dind
+  - name: $CI_REGISTRY/root/myusine/docker:19-dinde
     # hostname du service réseau
     alias: docker
-    # command: ["whoami"]
 
 #désactivé
 build:
