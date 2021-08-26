@@ -18,7 +18,7 @@ stages:
 services:
   # - docker:19-dind
   # - name: $CI_REGISTRY/root/myusine/docker:19-dinde
-  - name: docker:dind-stable
+  - name: docker:stable-dind
     # hostname du service réseau
     alias: docker
 
