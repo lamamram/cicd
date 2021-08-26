@@ -21,7 +21,7 @@ services:
     alias: docker
     command:
       - --insecure-registry
-      - $CI_REGISTRY
+      - gitlab.myusine.fr:5000
 
 #désactivé
 build:
