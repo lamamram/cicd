@@ -1,5 +1,5 @@
 # image par défaut du pipeline
-image: gitlab.myusine.fr:5050/root/myusine/ubuntu:focal
+image: gitlab.myusine.fr:5050/root/myusine/docker:19
 
 workflow:
   rules:
@@ -8,42 +8,12 @@ workflow:
 
 stages:
   - builds
-  - tests
-  - deploys
-
-# job désactivé (".") avec référence YAML ("&")
-.cache_pull: &cache_pull
-  key: venv
-  untracked: true
-  policy: pull
 
 build:
   stage: builds
   script:
-    - echo "Build 1"
-    - mkdir venv
-    - echo "venv" > venv/package
-  # génération d'un cache de dépendances logicielles
-  cache:
-    key: venv
-    paths:
-      - venv/
-    policy: push
+    - docker build -t my_tomcat:1.0 .
 
-test:
-  stage: tests
-  script:
-    - echo "Test 1"
-    - cat venv/package
-  # utilisation simple du cache venv
-  # alias YAML ("*")
-  cache: *cache_pull
-
-deploy:
-  stage: deploys
-  script:
-    - echo "deploys"
-  cache: *cache_pull
 
 
 
