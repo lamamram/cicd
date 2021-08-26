@@ -9,7 +9,7 @@ workflow:
 stages:
   - builds
   - tests
-  - push_inmage
+  - deploys
 
 # services réseaux ajoutés à un job (ou au pipeline)
 # les conteneurs sont disponible pour des connections
@@ -20,7 +20,8 @@ services:
     # hostname du service réseau
     alias: docker
 
-build:
+#désactivé
+.build:
   stage: builds
   script:
     - docker build -t $CI_REGISTRY/root/myusine/my_tomcat_tmp:1.0 .
@@ -30,7 +31,8 @@ build:
       -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker push $CI_REGISTRY/root/myusine/my_tomcat_tmp:1.0 .
 
-test:
+# désactivé
+.test:
   stage: tests
   # test de l'image généré précédemment avec 
   # vérification du message de sortie
@@ -50,5 +52,17 @@ test:
       -u $CI_REGISTRY_USER 
       -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker push $CI_REGISTRY/root/myusine/my_tomcat:1.0
+  
+deploy:
+  image: $CI_REGISTRY/root/myusine/ansible:ready
+  stage: deploys
+  # gestion de la clé privée
+  # et des contraintes ssh
+  before_script:
+    - echo "$ANSIBLE_PKEY" > ansible_pkey
+    - chmod 700 .
+    - chmod 400 ansible_pkey
+  script:
+    - ansible-playbook bootstrap.yml
     
 
