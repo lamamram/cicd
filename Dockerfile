@@ -11,7 +11,7 @@ LABEL description="Image tomcat avec application intégrée"
 RUN yum install -y java-11-openjdk
 
 RUN mkdir /opt/tomcat \
-    && curl -O https://downloads.apache.org/tomcat/tomcat-8/v8.5.70/bin/apache-tomcat-8.5.68.tar.gz \
+    && curl -O https://downloads.apache.org/tomcat/tomcat-8/v8.5.70/bin/apache-tomcat-8.5.70.tar.gz \
     && tar -zxf apache-tomcat-8.5.70.tar.gz \
     && mv apache-tomcat-8.5.70/* /opt/tomcat/ \
     && rm -rf /apache-tomcat-8.5.70*
