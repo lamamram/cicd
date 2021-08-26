@@ -23,8 +23,7 @@ services:
       - >
         echo "$SSL_CERT" > 
         /usr/local/share/ca-certificates/ca/crt && 
-        update-ca-certificates && 
-        dockerd-entrypoint.sh || exit
+        update-ca-certificates
 
 #désactivé
 build:
