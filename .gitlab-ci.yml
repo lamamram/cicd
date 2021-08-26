@@ -42,5 +42,7 @@ deploy:
   stage: deploys
   script:
     - echo "Deploy"
+  dependencies:
+    - test
 
 
