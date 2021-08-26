@@ -1,6 +1,5 @@
 # image par défaut du pipeline
-# image: $CI_REGISTRY/root/myusine/docker:19
-image: docker:stable
+image: $CI_REGISTRY/root/myusine/docker:19
 
 workflow:
   rules:
@@ -17,16 +16,16 @@ stages:
 # depuis le conteneur du job
 services:
   # - docker:19-dind
-  # - name: $CI_REGISTRY/root/myusine/docker:19-dinde
-  - name: docker:stable-dind
+  - name: $CI_REGISTRY/root/myusine/docker:19-dind
     # hostname du service réseau
     alias: docker
+    command:
+      - --insercure-registry
+      - $CI_REGISTRY
 
 #désactivé
 build:
   stage: builds
-  variables:
-    DOCKER_TLS_CERTDIR: ""
   script:
     - docker build -t $CI_REGISTRY/root/myusine/my_tomcat_tmp:1.0 .
     - >
