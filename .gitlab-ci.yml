@@ -14,9 +14,10 @@ build:
   # les conteneurs sont disponible pour des connections
   # depuis le conteneur du job
   services:
-    - name: docker:19-dind
-      # hostname du service réseau
-      alias: docker
+    - docker:19-dind
+    # - name: docker:19-dind
+    #   # hostname du service réseau
+    #   alias: docker
   stage: builds
   script:
     - whoami
