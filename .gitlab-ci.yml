@@ -12,16 +12,22 @@ stages:
   - deploys
 
 # services réseaux ajoutés à un job (ou au pipeline)
-# les conteneurs sont disponible pour des connections
+# les conteneurs sont disponibles pour des connections
 # depuis le conteneur du job
 services:
   # - docker:19-dind
   - name: $CI_REGISTRY/root/myusine/docker:19-dind
     # hostname du service réseau
     alias: docker
+    command:
+      - >
+        echo "$SSL_CERT" > 
+        /usr/local/share/ca-certificates/ca/crt && 
+        update-ca-certificates && 
+        dockerd-entrypoint.sh || exit
 
 #désactivé
-.build:
+build:
   stage: builds
   script:
     - docker build -t $CI_REGISTRY/root/myusine/my_tomcat_tmp:1.0 .
@@ -53,7 +59,7 @@ services:
       -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker push $CI_REGISTRY/root/myusine/my_tomcat:1.0
   
-deploy:
+.deploy:
   image: $CI_REGISTRY/root/myusine/ansible:ready
   stage: deploys
   # gestion de la clé privée
