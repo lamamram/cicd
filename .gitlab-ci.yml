@@ -19,7 +19,7 @@ services:
   - name: $CI_REGISTRY/root/myusine/docker:19-dind
     # hostname du service réseau
     alias: docker
-    command: ["whoami"]
+    # command: ["whoami"]
 
 #désactivé
 build:
