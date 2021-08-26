@@ -32,6 +32,11 @@ test:
   script:
     - echo "Test 1"
     - cat artifacts/report
+    - echo "tests" > artifacts/test_report
+  artifacts:
+    expire_in: 1 hour
+    paths:
+      - artifacts/test_report
 
 deploy:
   stage: deploys
