@@ -9,7 +9,7 @@ workflow:
 stages:
   - builds
   - tests
-  - deploy
+  - deploys
 
 build:
   stage: builds
