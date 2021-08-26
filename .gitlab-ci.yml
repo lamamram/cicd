@@ -23,6 +23,8 @@ services:
 #désactivé
 build:
   stage: builds
+  variables:
+    DOCKER_TLS_CERTDIR: ""
   script:
     - docker build -t $CI_REGISTRY/root/myusine/my_tomcat_tmp:1.0 .
     - >
