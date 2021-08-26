@@ -20,9 +20,7 @@ services:
     # hostname du service réseau
     alias: docker
     command:
-      - >
-        echo "$SSL_CERT" > 
-        /usr/local/share/ca-certificates/ca.crt
+      - whoami
 
 #désactivé
 build:
