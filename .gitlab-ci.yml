@@ -15,12 +15,11 @@ build:
   # depuis le conteneur du job
   services:
     # - docker:19-dind
-    - name: docker:19-dind
+    - name: gitlab.myusine.fr:5050/root/myusine/docker:19-dind
       # hostname du service réseau
       alias: docker
   stage: builds
   script:
-    - whoami
     - docker build -t my_tomcat:1.0 .
 
 
