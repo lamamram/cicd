@@ -1,5 +1,5 @@
 # image par défaut du pipeline
-image: gitlab.myusine.fr:5050/root/myusine/docker:19
+image: $CI_REGISTRY/root/myusine/docker:19
 
 workflow:
   rules:
@@ -15,14 +15,20 @@ stages:
 # depuis le conteneur du job
 services:
   # - docker:19-dind
-  - name: gitlab.myusine.fr:5050/root/myusine/docker:19-dind
+  - name: $CI_REGISTRY/root/myusine/docker:19-dind
     # hostname du service réseau
     alias: docker
 
 build:
   stage: builds
   script:
-    - docker build -t my_tomcat:1.0 .
+    - docker build -t $CI_registry/root/myusine/my_tomcat_tmp:1.0 .
+    - >
+      docker login 
+      -u $CI_REGISTRY_USER 
+      -p CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker push $CI_registry/root/myusine/my_tomcat_tmp:1.0 .
+
 
 test:
   stage: tests
@@ -33,7 +39,7 @@ test:
     - >
       docker container run 
       --name test 
-      my_tomcat:1.0 
+      $CI_REGISTRY/root/myusine/my_tomcat_tmp:1.0 
       /opt/tomcat/bin/startup.sh | grep -o "started."
 
 
