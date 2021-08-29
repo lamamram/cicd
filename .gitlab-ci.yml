@@ -19,11 +19,10 @@ services:
   - name: $CI_REGISTRY/root/myusine/docker:19-dind
     # hostname du service réseau
     alias: docker
-    entrypoint:
-      - "dockerd-entrypoint.sh"
     command:
-      - "--insecure-registry"
-      - "gitlab.myusine.fr:5000"
+      - /bin/sh
+      - -c
+      - echo "$SSL_CERT" > /usr/local/share/ca-certificates/my-ca.crt && update-ca-certificates && dockerd-entrypoint.sh || exit
 before_script:
   - >
     docker login 
