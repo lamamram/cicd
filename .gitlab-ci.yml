@@ -28,7 +28,7 @@ before_script:
   - >
     docker login 
     -u $CI_REGISTRY_USER 
-    -p $CI_REGISTRY_PASSWORD gitlab.myusine.fr:5000
+    -p $CI_REGISTRY_PASSWORD gitlab.myusine.fr:5050
 #    -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
 #désactivé
