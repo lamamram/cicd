@@ -13,7 +13,7 @@ build:
       -u $CI_REGISTRY_USER 
       --password-stdin
     - docker build -t $CI_REGISTRY/root/myusine/my_tomcat_tmp:1.0 .
-    - docker push $CI_REGISTRY/root/myusine/my_tomcat_tmp:1.0 .
+    - docker push $CI_REGISTRY/root/myusine/my_tomcat_tmp:1.0
 
     
 
