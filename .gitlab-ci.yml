@@ -1,79 +1,19 @@
 # image par défaut du pipeline
-# image: $CI_REGISTRY/root/myusine/docker:19
 image: docker:19.03
-
-workflow:
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "push"
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
 stages:
   - builds
-  - tests
-  - deploys
 
-# services réseaux ajoutés à un job (ou au pipeline)
-# les conteneurs sont disponibles pour des connections
-# depuis le conteneur du job
-services:
-  - name: docker:19.03-dind
-  # - name: $CI_REGISTRY/root/myusine/docker:19-dind
-    # hostname du service réseau
-    alias: docker
-    command:
-      - /bin/sh
-      - -c
-      - echo "$SSL_CERT" > /usr/local/share/ca-certificates/my-ca.crt && update-ca-certificates && dockerd-entrypoint.sh || exit
-before_script:
-  - >
-    docker login 
-    -u $CI_REGISTRY_USER 
-    -p $CI_REGISTRY_PASSWORD gitlab.myusine.fr:5050
-#    -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-
-#désactivé
 build:
   stage: builds
   script:
+    - >
+      echo "$CI_REGISTRY_PASSWORD" | 
+      docker login $CI_REGISTRY 
+      -u $CI_REGISTRY_USER 
+      --password-stdin
     - docker build -t $CI_REGISTRY/root/myusine/my_tomcat_tmp:1.0 .
-    # - >
-    #   docker login 
-    #   -u $CI_REGISTRY_USER 
-    #   -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker push $CI_REGISTRY/root/myusine/my_tomcat_tmp:1.0 .
 
-# désactivé
-.test:
-  stage: tests
-  # test de l'image généré précédemment avec 
-  # vérification du message de sortie
-  # (attention au CMD qui ne renvoie pas le prompt)
-  script:
-    - >
-      docker container run 
-      --name test
-      $CI_REGISTRY/root/myusine/my_tomcat_tmp:1.0 
-      /opt/tomcat/bin/startup.sh | grep -o "started."
-    - > 
-      docker tag 
-      $CI_REGISTRY/root/myusine/my_tomcat_tmp:1.0
-      $CI_REGISTRY/root/myusine/my_tomcat:1.0
-    - >
-      docker login 
-      -u $CI_REGISTRY_USER 
-      -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker push $CI_REGISTRY/root/myusine/my_tomcat:1.0
-  
-.deploy:
-  image: $CI_REGISTRY/root/myusine/ansible:ready
-  stage: deploys
-  # gestion de la clé privée
-  # et des contraintes ssh
-  before_script:
-    - echo "$ANSIBLE_PKEY" > ansible_pkey
-    - chmod 700 .
-    - chmod 400 ansible_pkey
-  script:
-    - ansible-playbook bootstrap.yml
     
 
