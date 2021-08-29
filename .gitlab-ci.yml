@@ -1,5 +1,6 @@
 # image par défaut du pipeline
-image: $CI_REGISTRY/root/myusine/docker:19
+# image: $CI_REGISTRY/root/myusine/docker:19
+image: docker:19.03
 
 workflow:
   rules:
@@ -15,8 +16,8 @@ stages:
 # les conteneurs sont disponibles pour des connections
 # depuis le conteneur du job
 services:
-  # - docker:19-dind
-  - name: $CI_REGISTRY/root/myusine/docker:19-dind
+  - name: docker:19.03-dind
+  # - name: $CI_REGISTRY/root/myusine/docker:19-dind
     # hostname du service réseau
     alias: docker
     command:
