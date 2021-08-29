@@ -1,19 +1,39 @@
-# image par défaut du pipeline
-image: docker:19.03
+image: $CI_REGISTRY/root/myusine/docker:19
 
 stages:
   - builds
+  - tests
+  - deploys
+
+before_script:
+  - >
+    echo "$CI_REGISTRY_PASSWORD" | 
+    docker login $CI_REGISTRY 
+    -u $CI_REGISTRY_USER 
+    --password-stdin
 
 build:
   stage: builds
   script:
-    - >
-      echo "$CI_REGISTRY_PASSWORD" | 
-      docker login $CI_REGISTRY 
-      -u $CI_REGISTRY_USER 
-      --password-stdin
     - docker build -t $CI_REGISTRY/root/myusine/my_tomcat_tmp:1.0 .
     - docker push $CI_REGISTRY/root/myusine/my_tomcat_tmp:1.0
+
+test:
+  stage: tests
+  script:
+    - >
+      docker container run 
+      $CI_REGISTRY/root/myusine/my_tomcat_tmp:1.0 
+      startup.sh | grep -o "started."
+
+push:
+  stage: deploys
+  script:
+    - >
+      docker tag
+      $CI_REGISTRY/root/myusine/my_tomcat_tmp:1.0
+      $CI_REGISTRY/root/myusine/my_tomcat:1.0
+    - docker push $CI_REGISTRY/root/myusine/my_tomcat:1.0
 
     
 
