@@ -22,9 +22,9 @@ test:
   stage: tests
   script:
     - >
-      docker container run -d 
+      docker container run 
       $CI_REGISTRY/root/myusine/my_tomcat_tmp:1.0 
-      startup.sh | grep -o "started."
+      /opt/tomcat/bin/startup.sh | grep -o "started."
 
 .push:
   stage: deploys
