@@ -46,5 +46,21 @@ push:
       $CI_REGISTRY/root/myusine/my_tomcat:1.0
     - docker push $CI_REGISTRY/root/myusine/my_tomcat:1.0
 
+staging:
+  stage: deploys
+  image: $CI_REGISTRY/root/myusine/ansible:ready
+  before_script:
+    - |
+      echo "$STAGING_PKEY" > ansible_pkey
+      chmod 700 .
+      chmod 400 ansible
+  script:
+    - ansible-playbook -e "ansible_become_pass=$STAGING_PSSWD" playbook.yml
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master"
+  environment:
+    name: staging
+    url: "http://192.168.1.77:8080"
+
     
 
