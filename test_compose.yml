@@ -1,0 +1,7 @@
+test_stack:
+  # services:
+  #   - docker:dind 
+  script:
+    - docker-compose -f wordpress-compose.yml up -d
+    - sleep 15
+    - docker-compose -f wordpress-compose.yml ps | grep -o "(healthy)"
