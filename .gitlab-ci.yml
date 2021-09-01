@@ -53,6 +53,8 @@ scan:
     TRIVY_PASSWORD: "$CI_REGISTRY_PASSWORD"
     TRIVY_AUTH_URL: "$CI_REGISTRY"
     FULL_IMAGE_NAME: $CI_REGISTRY_IMAGE/my_tomcat_tmp:1.0
+  before_script:
+    - ""
   script:
     - trivy --version
   rules:
