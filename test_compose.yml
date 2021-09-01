@@ -1,4 +1,5 @@
 test_stack:
+  image: docker/compose:latest
   # services:
   #   - docker:dind 
   script:

@@ -13,7 +13,7 @@ before_script:
     --password-stdin
 
 # appeler le pipeline d'un autre projet
-call_stack:
+.call_stack:
   # stage de début par défaut
   stage: .pre
   trigger:
@@ -23,21 +23,32 @@ call_stack:
     # du résultat du pipeline importé
     strategy: depend
 
-build:
+.build:
   stage: builds
   script:
     - docker build -t $CI_REGISTRY/root/myusine/my_tomcat_tmp:1.0 .
     - docker push $CI_REGISTRY/root/myusine/my_tomcat_tmp:1.0
+  rules:
+    - changes: [Dockerfile]
 
-test:
+.test:
   stage: tests
   script:
     - >
       docker container run 
       $CI_REGISTRY/root/myusine/my_tomcat_tmp:1.0 
       /opt/tomcat/bin/startup.sh | grep -o "started."
+  rules:
+    - changes: [Dockerfile]
 
-push:
+scan:
+  stage: tests
+  script:
+    - echo "$CI_REGISTRY_IMAGE"
+  rules:
+    - changes: [Dockerfile]  
+
+.push:
   stage: deploys
   script:
     - >
@@ -45,15 +56,17 @@ push:
       $CI_REGISTRY/root/myusine/my_tomcat_tmp:1.0
       $CI_REGISTRY/root/myusine/my_tomcat:1.0
     - docker push $CI_REGISTRY/root/myusine/my_tomcat:1.0
+  rules:
+    - changes: [Dockerfile]
 
-staging:
+.staging:
   stage: deploys
   image: $CI_REGISTRY/root/myusine/ansible:ready
   before_script:
     - |
       echo "$STAGING_PKEY" > ansible_pkey
       chmod 700 .
-      chmod 400 ansible
+      chmod 400 ansible_pkey
   script:
     - ansible-playbook -e "ansible_become_pass=$STAGING_PSSWD" playbook.yml
   rules:
