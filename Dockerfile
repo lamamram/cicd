@@ -28,4 +28,4 @@ RUN curl -O -L https://tomcat.apache.org/tomcat-9.0-doc/appdev/sample/sample.war
 EXPOSE 8080
 
 # Instruction CMD : commande finale qui executer quand un conteneur sera instancié à partir de cette image
-CMD ["/opt/tomcat/bin/catalina.sh", "run"] 
+CMD ["/opt/tomcat/bin/catalina.sh", "run"]  
