@@ -1,4 +1,4 @@
-image: $CI_REGISTRY/root/myusine/docker:19
+image: $CI_REGISTRY_IMAGE/docker:19
 
 stages:
   - builds
@@ -26,8 +26,8 @@ before_script:
 .build:
   stage: builds
   script:
-    - docker build -t $CI_REGISTRY/root/myusine/my_tomcat_tmp:1.0 .
-    - docker push $CI_REGISTRY/root/myusine/my_tomcat_tmp:1.0
+    - docker build -t $CI_REGISTRY_IMAGE/my_tomcat_tmp:1.0 .
+    - docker push $CI_REGISTRY_IMAGE/my_tomcat_tmp:1.0
   rules:
     - changes: [Dockerfile]
 
@@ -36,15 +36,25 @@ before_script:
   script:
     - >
       docker container run 
-      $CI_REGISTRY/root/myusine/my_tomcat_tmp:1.0 
+      $CI_REGISTRY_IMAGE/my_tomcat_tmp:1.0 
       /opt/tomcat/bin/startup.sh | grep -o "started."
   rules:
     - changes: [Dockerfile]
 
 scan:
   stage: tests
+  image:
+    name: aquasec/trivy:latest
+    entrypoint: [""]
+  variables:
+    # on n'utilise pas le code du dépôt
+    GIT_STRATEGY: none
+    TRIVY_USERNAME: "$CI_REGISTRY_USER"
+    TRIVY_PASSWORD: "$CI_REGISTRY_PASSWORD"
+    TRIVY_AUTH_URL: "$CI_REGISTRY"
+    FULL_IMAGE_NAME: $CI_REGISTRY_IMAGE/my_tomcat_tmp:1.0
   script:
-    - echo "$CI_REGISTRY_IMAGE"
+    - trivy --version
   rules:
     - changes: [Dockerfile]  
 
@@ -53,15 +63,15 @@ scan:
   script:
     - >
       docker tag
-      $CI_REGISTRY/root/myusine/my_tomcat_tmp:1.0
-      $CI_REGISTRY/root/myusine/my_tomcat:1.0
-    - docker push $CI_REGISTRY/root/myusine/my_tomcat:1.0
+      $CI_REGISTRY_IMAGE/my_tomcat_tmp:1.0
+      $CI_REGISTRY_IMAGE/my_tomcat:1.0
+    - docker push $CI_REGISTRY_IMAGE/my_tomcat:1.0
   rules:
     - changes: [Dockerfile]
 
 .staging:
   stage: deploys
-  image: $CI_REGISTRY/root/myusine/ansible:ready
+  image: $CI_REGISTRY_IMAGE/ansible:ready
   before_script:
     - |
       echo "$STAGING_PKEY" > ansible_pkey
